@@ -3,10 +3,12 @@ from turtle import forward, penup, pendown, left, exitonclick, right, setup, spe
 
 def cm_and_round(a):
     """
-    Prevadi ziskane hodnoty na cm a zaokrouhluje na 1 des. misto. Pokud vyjde cislo vetsi nez 100 cm, tak vraci "-".
-    Druhe cislo, ktere funkce vraci neprochazi touto podminkou - slouzi k vypoctu souradnic bodu a grafickemu znazorneni.
+    Prevadi ziskane hodnoty na cm a zaokrouhluje na 1 des. misto.
     :param:
     a -- cislo vzniknuvsi dosazenim do rovnice daneho zobrazeni, ktere prevadim na cm
+    :return:
+    a_cm -- hodnota v cm zaokrouhlena na 1 des. misto, pokud je vetsi nez 100 cm, je misto hodnoty vracena "-"
+    a_cm_2 -- totez jako a_cm, vraci ale vsechny hodnoty - i ty vetsi nez 100 cm - pro graficke znazorneni
     """
     a_cm = round((a / (meritko / 100000)), 1)
     a_cm2 = a_cm
@@ -28,7 +30,9 @@ def pol_rovnice(zem_delka):
     Prepocet zemepisne delky dle zobrazeni
     :param:
     zem_delka -- zemepisna delka, kterou chci prepocitat
-    :return: prepoctena zemepisna delka
+    :return:
+    x_cm - prepoctena hodnota v cm, pokud je vetsi nez 100 cm, tak je misto hodnoty vracena "-"
+    x_cm_2 - totez jako x_cm, jen pocita pro vsechny hodnoty - i pro ty vetsi nez 100 cm - pro graficke znazorneni
     """
     x = R*math.radians(zem_delka)
     (x_cm, x_cm_2) = cm_and_round(x)  # volam fci pro prevod na cm a zaokrouhleni
@@ -41,7 +45,7 @@ def rovn_lambert(zem_sirka):
     zem_sirka -- zemepisna sirka, kterou chci prepocitat
     :return:
     y_cm -- prepoctena hodnota v cm, pokud vetsi nez 100 cm, tak se misto ni vraci "-"
-    y_cm_2 -- prepoctena hodnota v cm
+    y_cm_2 -- prepoctena hodnota v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     y = R*math.sin(math.radians(zem_sirka))
     (y_cm, y_cm_2) = cm_and_round(y)
@@ -54,7 +58,7 @@ def rovn_marin(zem_sirka):
     zem_sirka -- zemepisna sirka, kterou chci prepocitat
     :return:
     y_cm -- prepoctena hodnota v cm, pokud vetsi nez 100 cm, tak se misto ni vraci "-"
-    y_cm_2 -- prepoctena hodnota v cm
+    y_cm_2 -- prepoctena hodnota v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     y = R*math.radians(zem_sirka)
     (y_cm, y_cm_2) = cm_and_round(y)
@@ -67,7 +71,7 @@ def rovn_braun(zem_sirka):
     zem_sirka -- zemepisna sirka, kterou chci prepocitat
     :return:
     y_cm -- prepoctena hodnota v cm, pokud vetsi nez 100 cm, tak se misto ni vraci "-"
-    y_cm_2 -- prepoctena hodnota v cm
+    y_cm_2 -- prepoctena hodnota v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     y = 2*R*math.tan((math.radians(zem_sirka))/2)
     (y_cm, y_cm_2) = cm_and_round(y)
@@ -80,11 +84,11 @@ def rovn_mercator(zem_sirka):
     zem_sirka -- zemepisna sirka, kterou chci prepocitat
     :return:
     y_cm -- prepoctena hodnota v cm, pokud vetsi nez 100 cm, tak se misto ni vraci "-"
-    y_cm_2 -- prepoctena hodnota v cm
+    y_cm_2 -- prepoctena hodnota v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     d = math.radians(90 - zem_sirka)  # polarni vzdalenost v rad
     if d == 0:
-        return("-", "-")
+        return("-", "-") # osetreni rovnobezky 90 - nekonecno
     else:
         cotg_d_pul = (math.cos(d / 2)) / (math.sin(d / 2))  # cotg z poloviny polarni vzdal
         y = R * math.log(cotg_d_pul)
@@ -96,7 +100,7 @@ def tvorba_poledniku():
     """Vypocet souradnic poledniku
     :return:
     poledniky -- seznam prepoctenych hodnot poledniku v cm, kde misto hodnot vetsich nez 100 cm je "-"
-    poledniky_kresleni -- seznam prepoctenych hodnot pro poledniky v cm
+    poledniky_kresleni -- seznam prepoctenych hodnot pro poledniky v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     poledniky = []
     poledniky_kresleni = []
@@ -109,7 +113,11 @@ def tvorba_poledniku():
 def lambert():
     """"
     Vypocet hodnot pro rovnobezky a poledniky dle Lambertova zobrazeni, vraci seznam x a y hodnot v cm
-    :return seznamy prepoctenych hodnot pro rovnobezky a poledniky
+    :return
+    rovnobezky -- seznam prepoctenych hodnot rovnobezek v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    pol_cm -- seznam prepoctenych hodnot poledniku v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    rovnobezky_kresleni -- seznam prepoctenych hodnot rovnobezek v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
+    poledniky_kresleni -- seznam prepoctenych hodnot poledniku v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     (pol_cm, poledniky_kresleni) = tvorba_poledniku()
     rovnobezky = []
@@ -124,7 +132,11 @@ def lambert():
 def marin():
     """"
     Vypocet hodnot pro rovnobezky a poledniky dle Marinova zobrazeni, vraci seznam x a y hodnot v cm
-    :return seznamy prepoctenych hodnot pro rovnobezky a poledniky
+    :return
+    rovnobezky -- seznam prepoctenych hodnot rovnobezek v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    pol_cm -- seznam prepoctenych hodnot poledniku v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    rovnobezky_kresleni -- seznam prepoctenych hodnot rovnobezek v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
+    poledniky_kresleni -- seznam prepoctenych hodnot poledniku v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     (pol_cm, poledniky_kresleni) = tvorba_poledniku()
     rovnobezky = []
@@ -139,7 +151,11 @@ def marin():
 def braun():
     """"
     Vypocet hodnot pro rovnobezky a poledniky dle Braunova zobrazeni, vraci seznam x a y hodnot v cm
-    :return seznamy prepoctenych hodnot pro rovnobezky a poledniky
+    :return
+    rovnobezky -- seznam prepoctenych hodnot rovnobezek v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    pol_cm -- seznam prepoctenych hodnot poledniku v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    rovnobezky_kresleni -- seznam prepoctenych hodnot rovnobezek v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
+    poledniky_kresleni -- seznam prepoctenych hodnot poledniku v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     (pol_cm, poledniky_kresleni) = tvorba_poledniku()
     rovnobezky = []
@@ -154,7 +170,11 @@ def braun():
 def mercator():
     """"
     Vypocet hodnot pro rovnobezky a poledniky dle Mercatorova zobrazeni, vraci seznam x a y hodnot v cm
-    :return seznamy prepoctenych hodnot pro rovnobezky a poledniky
+    :return
+    rovnobezky -- seznam prepoctenych hodnot rovnobezek v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    pol_cm -- seznam prepoctenych hodnot poledniku v cm, kde misto hodnot vetsich nez 100 cm je "-"
+    rovnobezky_kresleni -- seznam prepoctenych hodnot rovnobezek v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
+    poledniky_kresleni -- seznam prepoctenych hodnot poledniku v cm, zahrnuje i hodnoty vetsi nez 100 cm - pro graficke znazorneni
     """
     (pol_cm, poledniky_kresleni) = tvorba_poledniku()
     rovnobezky = []
@@ -169,8 +189,10 @@ def mercator():
 
 def bod():
     """
-    Ziska od uzivatele zemepisnou sirku a delku zadaneho bodu
-    :return souradnice zadaneho bodu, pokud jsou v poradku
+    Ziska od uzivatele zemepisnou sirku a delku zadaneho bodu, zkontroluje a pripadne upozorni na nekorektni vstupy
+    :return
+    zs -- korektni zemepisna sirka zadaneho bodu
+    zd -- korektni zemepisna delka zadaneho bodu
     """
     while True:
         zs = float(input("zem sirka bodu"))
@@ -185,10 +207,9 @@ def bod():
 
 def priprava_seznamu(list_rovn, list_pol):
     """Upravi ziskane seznamy rovnobezek a poledniku pro nasledne graficke znazorneni. Vraci upravene seznamy.
-
     :return:
-    rovn_upr -- seznam prepoctenych souradnic pro rovnobezky
-    pol_upr -- seznam prepoctenych souradnic pro poledniky
+    rovn_upr -- upraveny seznam prepoctenych souradnic pro rovnobezky pro graficke vykresleni
+    pol_upr -- upraveny seznam prepoctenych souradnic pro poledniky pro graficke vykresleni
     """
     if zobrazeni == "M":
         rovn_upr = list_rovn[list_rovn.index(0) + 1 : -1]
@@ -202,10 +223,13 @@ def priprava_seznamu(list_rovn, list_pol):
 
 def zelva_sit_rovn(list_rovn_upr, list_pol_upr, anti_kumul_r):
     """Kresli sit rovnobezek.
-
-    vstupy:
+    :param
     list_rovn_upr -- upraveny seznam rovnobezek (vystup z fce priprava_seznamu)
     list_pol_upr -- upraveny seznam poledniku (vystup z fce priprava_seznamu)
+    anti_kumul_r -- upraveny seznam rovnobezek obsahujici navic hodnotu 0 na prvnim miste -- tedy posunuty seznam
+    rovnobezek, ktery slouzi k vypoctu vzdalenosti mezi jednotlivymi rovnobezkami
+    anti_kumul_p -- upraveny seznam poledniku obsahujici navic hodnotu 0 na prvnim miste -- tedy posunuty seznam
+    poledniku, ktery slouzi k vypoctu vzdalenosti mezi jednotlivymi rovnobezkami
     """
     # posunuti na stred
     screensize(list_pol_upr[-1] + 100, list_rovn_upr[-1]*20 + 100)
@@ -225,7 +249,7 @@ def zelva_sit_rovn(list_rovn_upr, list_pol_upr, anti_kumul_r):
         left(180)
         forward(list_pol_upr[-1])
         right(90)
-        forward((y - z) * 10)
+        forward((y - z) * 10) # posun o vzdalenost danych dvou rovnobezek
         right(90)
         if count ==len(list_rovn_upr):
             forward(list_pol_upr[-1])
@@ -248,9 +272,11 @@ def zelva_sit_rovn(list_rovn_upr, list_pol_upr, anti_kumul_r):
 def zelva_sit_pol(list_rovn_upr, list_pol_upr, anti_kumul_p):
     """Kresli sit poledniku
 
-    vstupy:
+    :param:
     list_rovn_upr -- upraveny seznam rovnobezek (vystup z fce priprava_seznamu)
     list_pol_upr -- upraveny seznam poledniku (vystup z fce priprava_seznamu)
+    anti_kumul_p -- upraveny seznam poledniku obsahujici navic hodnotu 0 na prvnim miste -- tedy posunuty seznam
+    poledniku, ktery slouzi k vypoctu vzdalenosti mezi jednotlivymi poledniky
     """
     right(90)
     count = 0
@@ -268,7 +294,7 @@ def zelva_sit_pol(list_rovn_upr, list_pol_upr, anti_kumul_p):
             forward(presah)
             pensize(1)
             right(90)
-            forward(p - q)
+            forward(p - q) # posun o vzdalenost mezi dvema poledniky
             left(90)
             if count == len(list_pol_upr):
                 forward(list_rovn_upr[-1] * 20 + presah)
@@ -314,7 +340,7 @@ if R ==0:
 
 if zobrazeni == "L":
     vypis(lambert()[0:2])
-    while True:
+    while True: # vypocet souradnic zadaneho bodu
         souradnice = bod()
         if souradnice ==(0,0):
             break
@@ -325,7 +351,7 @@ if zobrazeni == "L":
 
 elif zobrazeni =="A":
     vypis(marin()[0:2])
-    while True:
+    while True: # vypocet souradnic zadaneho bodu
         souradnice = bod()
         if souradnice == (0, 0):
             break
@@ -336,7 +362,7 @@ elif zobrazeni =="A":
 
 elif zobrazeni =="B":
     vypis(braun()[0:2])
-    while True:
+    while True: # vypocet souradnic zadaneho bodu
         souradnice = bod()
         if souradnice == (0, 0):
             break
@@ -347,7 +373,7 @@ elif zobrazeni =="B":
 
 elif zobrazeni =="M":
     vypis(mercator()[0:2])
-    while True:
+    while True: # vypocet souradnic zadaneho bodu
         souradnice = bod()
         if souradnice == (0, 0):
             break
@@ -371,12 +397,11 @@ elif zobrazeni =="M":
 (rovn_upr, pol_upr) = priprava_seznamu(rovnobezky_kresleni, poledniky_kresleni)
 
 # seznamy slouzici k vypoctu vzdalenosti mezi jednotlivymi rovnobezkami resp. poledniky
+# jedna se o posunute seznamy rovnobezek/poledniku, ktere slouzi k vypoctu vzdalenosti mezi dvema rovnobezkami/poledniky
 anti_kumul_r = rovn_upr.copy()
 anti_kumul_r.insert(0,0)
 anti_kumul_p = pol_upr.copy()
 anti_kumul_p.insert(0,0)
-
-
 
 
 zelva_sit_rovn(rovn_upr, pol_upr, anti_kumul_r)
